@@ -2,13 +2,57 @@ services:
   portainer:
     container_name: portainer
     image: portainer/portainer-ce:lts
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./volumes/portainer:/data
     ports:
       - 9443:9443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # gives docker access
+      - ./volumes/portainer:/data # is actual volume folder
+    restart: always
+
+  homepage:
+    container_name: homepage
+    image: ghcr.io/gethomepage/homepage:latest
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: "*" # may want to later make this more focused
+      PUID: 1000
+      PGID: 1000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./volumes/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+  uptime-kuma:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    ports:
+      - 3001:3001
+    volumes:
+      - ./volumes/uptime-kuma:/app/data
+    restart: always
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    ports:
+      - 9999:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - 80:80
+      - 443:443
+      - 81:81
+    volumes:
+      - ./volumes/npm/data:/data
+      - ./volumes/npm/letsencrypt:/etc/letsencrypt
+    restart: always
 
 networks:
   default:
-    name: portainer_network
+    name: homebase
