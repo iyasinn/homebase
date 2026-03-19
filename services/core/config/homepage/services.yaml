@@ -1,0 +1,17 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+- Core:
+    - Portainer:
+        href: https://localhost:9443
+        description: Container Management
+        icon: portainer
+    - Uptime Kuma:
+        href: http://localhost:3001
+        description: Service Monitoring
+        icon: uptime-kuma
+    - Dozzle:
+        href: http://localhost:9999
+        description: Container Logs
+        icon: dozzle

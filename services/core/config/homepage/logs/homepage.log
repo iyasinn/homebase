@@ -1,0 +1,8 @@
+[2026-03-19T09:04:27.223Z] info: kubernetes.yaml was copied to the config folder
+[2026-03-19T09:11:23.380Z] info: widgets.yaml was copied to the config folder
+[2026-03-19T09:11:23.478Z] info: docker.yaml was copied to the config folder
+[2026-03-19T09:11:23.485Z] info: services.yaml was copied to the config folder
+[2026-03-19T09:11:23.487Z] info: bookmarks.yaml was copied to the config folder
+[2026-03-19T09:11:23.491Z] info: proxmox.yaml was copied to the config folder
+[2026-03-19T09:11:23.539Z] info: custom.css was copied to the config folder
+[2026-03-19T09:11:23.540Z] info: custom.js was copied to the config folder
