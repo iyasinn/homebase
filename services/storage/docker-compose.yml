@@ -18,7 +18,10 @@ services:
       - ./volumes/nextcloud/data:/var/www/html/data
     depends_on:
       - nextcloud-db
-      - nextcloud-redis
+      - nextcloud-redis    
+    labels:
+      kuma.nextcloud.http.name: "Nextcloud"
+      kuma.nextcloud.http.url: "http://nextcloud:80"
     restart: always
 
   nextcloud-db:

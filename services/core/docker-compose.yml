@@ -2,16 +2,22 @@ services:
   portainer:
     container_name: portainer
     image: portainer/portainer-ce:lts
+    labels:
+      kuma.portainer.http.name: "Portainer"
+      kuma.portainer.http.url: "https://portainer:9443"
+      kuma.portainer.http.accepted_statuscodes: "['200-499']"
     ports:
       - 9443:9443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # gives docker access
       - ./volumes/portainer:/data # is actual volume folder
     restart: always
-
   homepage:
     container_name: homepage
     image: ghcr.io/gethomepage/homepage:latest
+    labels:
+      kuma.homepage.http.name: "Homepage"
+      kuma.homepage.http.url: "http://homepage:3000"
     environment:
       HOMEPAGE_ALLOWED_HOSTS: "*" # may want to later make this more focused
       PUID: 1000
@@ -22,7 +28,6 @@ services:
       - ./config/homepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
-
   uptime-kuma:
     container_name: uptime-kuma
     image: louislam/uptime-kuma:1
@@ -31,10 +36,24 @@ services:
     volumes:
       - ./volumes/uptime-kuma:/app/data
     restart: always
-
+  autokuma:
+    container_name: autokuma
+    image: ghcr.io/bigboot/autokuma:latest
+    environment:
+      AUTOKUMA__KUMA__URL: http://uptime-kuma:3001
+      AUTOKUMA__KUMA__USERNAME: ${UPTIME_KUMA_USERNAME}
+      AUTOKUMA__KUMA__PASSWORD: ${UPTIME_KUMA_PASSWORD}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - uptime-kuma
+    restart: always
   dozzle:
     container_name: dozzle
     image: amir20/dozzle:latest
+    labels:
+      kuma.dozzle.http.name: "Dozzle"
+      kuma.dozzle.http.url: "http://dozzle:8080"
     ports:
       - 9999:8080    
     # environment:
@@ -50,7 +69,23 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./volumes/dozzle:/data
     restart: always
-
+  duplicati:
+    container_name: duplicati
+    image: lscr.io/linuxserver/duplicati:latest
+    labels:
+      kuma.duplicati.http.name: "Duplicati"
+      kuma.duplicati.http.url: "http://duplicati:8200"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Detroit
+    ports:
+      - 8200:8200
+    volumes:
+      - ./config/duplicati:/config
+      - ~/homebase-backups:/backups
+      - ~/homebase:/source/homebase:ro
+    restart: always
   # TODO: Re enable these when I move to a linux server
   # nginx-proxy-manager:
   #   container_name: nginx-proxy-manager
@@ -78,7 +113,6 @@ services:
   #     - ./volumes/adguard/work:/opt/adguardhome/work
   #     - ./config/adguard:/opt/adguardhome/conf
   #   restart: always
-
 networks:
   default:
     name: homebase
