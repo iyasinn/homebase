@@ -86,20 +86,21 @@ services:
       - ~/homebase-backups:/backups
       - ~/homebase:/source/homebase:ro
     restart: always
+
   # TODO: Re enable these when I move to a linux server
-  # nginx-proxy-manager:
-  #   container_name: nginx-proxy-manager
-  #   image: jc21/nginx-proxy-manager:latest
-  #   environment:
-  #     TZ: America/Detroit
-  #   ports:
-  #     - 80:80
-  #     - 81:81
-  #     - 443:443
-  #   volumes:
-  #     - ./volumes/npm/data:/data
-  #     - ./volumes/npm/letsencrypt:/etc/letsencrypt
-  #   restart: always
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager:latest
+    environment:
+      TZ: America/Detroit
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - ./volumes/npm/data:/data
+      - ./volumes/npm/letsencrypt:/etc/letsencrypt
+    restart: always
   #
   # adguard:
   #   container_name: adguard
