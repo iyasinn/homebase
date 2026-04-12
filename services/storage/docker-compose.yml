@@ -14,8 +14,7 @@ services:
       NEXTCLOUD_TRUSTED_DOMAINS: "localhost:8080"
       REDIS_HOST: nextcloud-redis
     volumes:
-      - ./volumes/nextcloud/html:/var/www/html
-      - ./volumes/nextcloud/data:/var/www/html/data
+      - ./volumes/nextcloud:/var/www/html
     depends_on:
       - nextcloud-db
       - nextcloud-redis    
@@ -42,6 +41,27 @@ services:
     image: redis:alpine
     volumes:
       - ./volumes/nextcloud-redis:/data
+    restart: always
+
+  syncthing:
+    container_name: syncthing
+    image: lscr.io/linuxserver/syncthing:latest
+    labels:
+      kuma.syncthing.http.name: "Syncthing"
+      kuma.syncthing.http.url: "http://syncthing:8384"
+    hostname: homebase-sync
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Detroit
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    volumes:
+      - ./config/syncthing:/config
+      - ./data/syncthing:/data
     restart: always
 
 networks:
