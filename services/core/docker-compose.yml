@@ -41,8 +41,8 @@ services:
     image: ghcr.io/bigboot/autokuma:latest
     environment:
       AUTOKUMA__KUMA__URL: http://uptime-kuma:3001
-      AUTOKUMA__KUMA__USERNAME: ${UPTIME_KUMA_USERNAME}
-      AUTOKUMA__KUMA__PASSWORD: ${UPTIME_KUMA_PASSWORD}
+      AUTOKUMA__KUMA__USERNAME: ${UPTIME_KUMA_USERNAME:?UPTIME_KUMA_USERNAME is required}
+      AUTOKUMA__KUMA__PASSWORD: ${UPTIME_KUMA_PASSWORD:?UPTIME_KUMA_PASSWORD is required}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
@@ -79,6 +79,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: America/Detroit
+      SETTINGS_ENCRYPTION_KEY: ${DUPLICATI_SETTINGS_ENCRYPTION_KEY:?DUPLICATI_SETTINGS_ENCRYPTION_KEY is required}
     ports:
       - 8200:8200
     volumes:
