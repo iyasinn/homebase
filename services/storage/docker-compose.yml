@@ -67,3 +67,4 @@ services:
 networks:
   default:
     name: homebase
+    external: true
