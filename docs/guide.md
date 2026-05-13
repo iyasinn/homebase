@@ -162,21 +162,26 @@ Your browser will show a security warning because Portainer uses a self-signed S
   ├── start.sh                          # Start all services
   ├── stop.sh                           # Stop all services
   ├── services/
-  │   └── core/
-  │       ├── docker-compose.yml        # Service definitions
-  │       ├── config/                   # Hand-edited configs (git tracked)
-  │       │   └── homepage/             # Homepage YAML configs
-  │       └── volumes/                  # App-generated data (gitignored)
-  │           ├── portainer/
-  │           ├── uptime-kuma/
-  │           └── dozzle/
+  │   ├── core/
+  │   │   ├── docker-compose.yml        # Core service definitions
+  │   │   ├── config/                   # Hand-edited configs
+  │   │   │   └── homepage/
+  │   │   └── volumes/                  # Persistent app data
+  │   └── storage/
+  │       ├── docker-compose.yml        # Storage service definitions
+  │       ├── config/                   # Hand-edited configs
+  │       └── volumes/                  # Persistent app data
   ├── docs/
   │   ├── decisions.md                  # Why you made each choice
   │   └── guide.md                      # This file
   └── backups/
 ```
 
-**Rule:** `config/` = your stuff, goes in Git. `volumes/` = app data, gitignored.
+**Rule:** Each stack keeps its own folders next to its compose file.
+
+`config/` = hand-edited config you manage.
+
+`volumes/` = persistent app data created and owned by containers.
 
 ---
 

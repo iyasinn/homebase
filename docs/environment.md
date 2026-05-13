@@ -2,6 +2,18 @@
 
 This document explains where Docker Compose environment variables come from in this repo and which values are required before starting the stack.
 
+## Directory Convention
+
+Each stack owns its files inside its own folder:
+
+- `services/core/config` and `services/core/volumes`
+- `services/storage/config` and `services/storage/volumes`
+
+Use this rule consistently:
+
+- `config/` for hand-edited configuration
+- `volumes/` for persistent container-managed state
+
 ## How Variable Loading Works
 
 The repo starts services through [`start.sh`](/Users/iyasin/Documents/code/projects/Homebase/start.sh:1):

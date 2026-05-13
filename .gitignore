@@ -30,7 +30,7 @@ volumes/
 # App config with secrets
 # =========================
 services/storage/config/syncthing/
-services/storage/data/syncthing/
+services/storage/volumes/syncthing/
 
 services/core/config/duplicati/
 services/core/volumes/duplicati/
