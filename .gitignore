@@ -2,3 +2,92 @@
 
 volumes/
 */volumes/*
+
+# =========================
+# Secrets / environment
+# =========================
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*.age
+*.sops.*
+
+# =========================
+# Docker runtime state
+# =========================
+volumes/
+**/volumes/
+
+# =========================
+# App config with secrets
+# =========================
+services/storage/config/syncthing/
+services/storage/data/syncthing/
+
+services/core/config/duplicati/
+services/core/volumes/duplicati/
+
+services/core/volumes/uptime-kuma/
+services/core/volumes/portainer/
+services/core/volumes/dozzle/
+services/core/volumes/npm/
+
+services/storage/volumes/nextcloud/
+services/storage/volumes/nextcloud-db/
+services/storage/volumes/nextcloud-redis/
+
+# =========================
+# Databases / generated state
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.lock
+
+**/index-v2/
+**/*.ldb
+**/*.log
+**/CURRENT
+**/LOCK
+**/MANIFEST-*
+
+# =========================
+# Logs / temp files
+# =========================
+*.log
+logs/
+tmp/
+temp/
+.cache/
+.DS_Store
+
+# =========================
+# Backups
+# =========================
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.bak
+*.backup
+*.dump
+*.sql
+homebase-backups/
+
+# =========================
+# Editor / OS
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
