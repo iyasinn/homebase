@@ -3,21 +3,33 @@
 # https://gethomepage.dev/configs/services/
 
 - Core:
+    - Homepage:
+        href: http://shadowserver:3000
+        description: Dashboard
+        icon: homepage
     - Portainer:
-        href: https://localhost:9443
+        href: https://shadowserver:9443
         description: Container Management
         icon: portainer
     - Uptime Kuma:
-        href: http://localhost:3001
+        href: http://shadowserver:3001
         description: Service Monitoring
         icon: uptime-kuma
     - Dozzle:
-        href: http://localhost:9999
+        href: http://shadowserver:9999
         description: Container Logs
         icon: dozzle
+    - Duplicati:
+        href: http://shadowserver:8200
+        description: Backup Management
+        icon: duplicati
+    - Nginx Proxy Manager:
+        href: http://shadowserver:81
+        description: Reverse Proxy
+        icon: nginx-proxy-manager
 
 - Storage:
     - Nextcloud:
-        href: http://localhost:8080
+        href: http://shadowserver:8080
         description: File Storage
         icon: nextcloud
