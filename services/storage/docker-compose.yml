@@ -39,7 +39,6 @@ services:
     labels:
       kuma.calibre-web.http.name: "Calibre Web"
       kuma.calibre-web.http.url: "http://calibre-web:8083"
-    restart: always
 
   nextcloud-db:
     container_name: nextcloud-db
