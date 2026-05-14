@@ -27,6 +27,7 @@ docker compose --env-file .env -f services/core/docker-compose.yml up -d
 
 echo "Starting storage services:"
 echo "  Nextcloud: ${ROOT_URL}:8080"
+echo "  Calibre Web: ${ROOT_URL}:8083"
 docker compose --env-file .env -f services/storage/docker-compose.yml up -d
 
 echo "Done!"

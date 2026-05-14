@@ -43,7 +43,9 @@ docker compose --env-file .env -f services/core/docker-compose.yml ps
 docker compose --env-file .env -f services/storage/docker-compose.yml ps
 docker compose --env-file .env -f services/core/docker-compose.yml restart homepage
 docker compose --env-file .env -f services/core/docker-compose.yml up -d --force-recreate duplicati
+docker compose --env-file .env -f services/storage/docker-compose.yml up -d calibre-web
 docker logs homepage
+docker logs calibre-web
 docker logs duplicati
 docker logs nextcloud
 ```
@@ -53,3 +55,4 @@ docker logs nextcloud
 - Homepage links are browser-facing and currently point to `shadowserver`
 - Uptime Kuma monitor targets should use internal Docker hostnames
 - If you change `.env`, recreate the affected container when needed
+- On first run, configure Calibre Web to use `/books` as the library path

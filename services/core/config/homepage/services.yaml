@@ -33,3 +33,7 @@
         href: http://shadowserver:8080
         description: File Storage
         icon: nextcloud
+    - Calibre Web:
+        href: http://shadowserver:8083
+        description: Ebook Library
+        icon: calibre-web

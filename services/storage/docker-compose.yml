@@ -23,6 +23,24 @@ services:
       kuma.nextcloud.http.url: "http://nextcloud:80"
     restart: always
 
+  calibre-web:
+    container_name: calibre-web
+    image: lscr.io/linuxserver/calibre-web:latest
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Detroit
+      DOCKER_MODS: linuxserver/mods:universal-calibre
+    ports:
+      - 8083:8083
+    volumes:
+      - ./volumes/calibre-web:/config
+      - ./volumes/calibre/library:/books
+    labels:
+      kuma.calibre-web.http.name: "Calibre Web"
+      kuma.calibre-web.http.url: "http://calibre-web:8083"
+    restart: always
+
   nextcloud-db:
     container_name: nextcloud-db
     image: mariadb:lts
