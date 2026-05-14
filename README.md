@@ -1,77 +1,42 @@
 # Homebase
 
-Homebase is a Docker Compose-based self-hosted stack for running a small personal homelab. It is split into two service groups:
+Homebase is a small self-hosted homelab split across two Docker Compose stacks:
 
-- `services/core` for dashboarding, monitoring, backups, logs, and container management
-- `services/storage` for file storage and media/library services
+- `services/core`: dashboarding, monitoring, logs, backups, and Docker admin
+- `services/storage`: file storage, ebook library, and the services Nextcloud depends on
 
-The repo is structured so that hand-managed configuration lives alongside each stack, while generated app state stays in local volume directories that are ignored by Git.
+The repo keeps hand-managed config in Git and leaves runtime data in local `volumes/` directories.
 
-## What This Runs
+## At A Glance
 
-### Core services
+### Core
 
-- `Homepage`: dashboard
-- `Portainer`: Docker management UI
-- `Uptime Kuma`: service monitoring
-- `Autokuma`: auto-registers monitors from Docker labels
-- `Dozzle`: container log viewer
-- `Duplicati`: backups
-- `Nginx Proxy Manager`: reverse proxy UI
+- Homepage
+- Portainer
+- Uptime Kuma
+- Autokuma
+- Dozzle
+- Duplicati
+- Nginx Proxy Manager
 
-### Storage services
+### Storage
 
-- `Nextcloud`: file storage and sync
-- `Calibre Web`: ebook library
-- `MariaDB`: Nextcloud database
-- `Redis`: Nextcloud cache/session backend
+- Nextcloud
+- Calibre Web
+- MariaDB
+- Redis
 
-Commented-out services in the compose files are not currently active.
-
-## Project Layout
-
-```text
-homebase/
-  .env.example
-  start.sh
-  stop.sh
-  docs/
-  services/
-    core/
-      docker-compose.yml
-      config/
-      volumes/
-    storage/
-      docker-compose.yml
-      volumes/
-```
-
-Rules of thumb:
-
-- `config/` contains configuration you are expected to manage directly
-- `volumes/` contains persistent runtime data and is ignored by Git
-- the root `.env` file is the source of truth for both compose stacks
-
-## Prerequisites
-
-- Docker
-- Docker Compose v2 (`docker compose`)
-- A local `.env` file copied from `.env.example`
-
-Optional but recommended:
-
-- A machine/user setup that matches the LinuxServer `PUID=1000` and `PGID=1000` defaults
-- Review of any host bind mounts before first run, especially Duplicati paths
+Some extra services are present in the compose files but commented out.
 
 ## Quick Start
 
-1. Copy the example environment file:
+1. Copy the example env file:
 
    ```bash
    cp .env.example .env
    ```
 
-2. Update the required values in `.env`:
+2. Set the required values in `.env`:
 
    ```env
    ROOT_URL=http://localhost
@@ -85,48 +50,45 @@ Optional but recommended:
    NEXTCLOUD_ADMIN_PASSWORD=change-me
    ```
 
-3. Review host-mounted paths in [`services/core/docker-compose.yml`](/Users/iyasin/Documents/code/projects/Homebase/services/core/docker-compose.yml) if you are not using the original machine layout.
+3. Review host bind mounts before first run.
 
-   `Duplicati` currently mounts:
+   `Duplicati` currently expects:
 
-   - `~/homebase-backups` to `/backups`
-   - `~/homebase` to `/source/homebase:ro`
+   - `~/homebase-backups` mounted to `/backups`
+   - `~/homebase` mounted to `/source/homebase:ro`
 
-4. Start the stack:
+   If that does not match your machine, update [`services/core/docker-compose.yml`](/Users/iyasin/Documents/code/projects/Homebase/services/core/docker-compose.yml).
+
+4. Start everything:
 
    ```bash
    ./start.sh
    ```
 
-`start.sh` will:
-
-- load `.env`
-- create the external Docker network `homebase` if it does not already exist
-- start the core stack
-- start the storage stack
+`start.sh` loads `.env`, creates the external Docker network `homebase` if needed, then starts both compose stacks.
 
 ## Default Local URLs
 
-If `ROOT_URL=http://localhost`, the exposed services are expected at:
+If `ROOT_URL=http://localhost`, these are the browser entry points:
 
-- `http://localhost:3000` for Homepage
-- `http://localhost:3001` for Uptime Kuma
-- `https://localhost:9443` for Portainer
-- `http://localhost:9999` for Dozzle
-- `http://localhost:8200` for Duplicati
-- `http://localhost:81` for Nginx Proxy Manager
-- `http://localhost:8080` for Nextcloud
-- `http://localhost:8083` for Calibre Web
+- Homepage: `http://localhost:3000`
+- Uptime Kuma: `http://localhost:3001`
+- Portainer: `https://localhost:9443`
+- Dozzle: `http://localhost:9999`
+- Duplicati: `http://localhost:8200`
+- Nginx Proxy Manager: `http://localhost:81`
+- Nextcloud: `http://localhost:8080`
+- Calibre Web: `http://localhost:8083`
 
-## Operations
+## Common Commands
 
-Start everything:
+Start both stacks:
 
 ```bash
 ./start.sh
 ```
 
-Stop everything:
+Stop both stacks:
 
 ```bash
 ./stop.sh
@@ -161,32 +123,54 @@ docker logs duplicati
 docker logs nextcloud
 ```
 
-## Configuration Notes
+## How The Repo Is Organized
 
-- Both compose files use the same external Docker network: `homebase`
-- Missing required environment variables fail fast because the compose files use `${VAR:?message}` checks
-- Browser-facing links and container-to-container targets are different
-- Uptime Kuma and other internal checks should use Docker service names such as `homepage`, `nextcloud`, and `portainer`
+```text
+homebase/
+  .env.example
+  start.sh
+  stop.sh
+  docs/
+  services/
+    core/
+      docker-compose.yml
+      config/
+      volumes/
+    storage/
+      docker-compose.yml
+      volumes/
+```
 
-## Known Caveat
+- `config/` is for files you are expected to edit directly
+- `volumes/` is for persistent app data and is ignored by Git
+- the root `.env` file is shared by both compose stacks
 
-Homepage is currently configured with hardcoded `http://shadowserver:*` links in [`services/core/config/homepage/services.yaml`](/Users/iyasin/Documents/code/projects/Homebase/services/core/config/homepage/services.yaml), while `.env` defaults `ROOT_URL` to `http://localhost`.
+## Operational Notes
+
+- Both compose files attach to the same external Docker network: `homebase`
+- Required env vars use `${VAR:?message}` checks, so missing values fail fast
+- Browser-facing URLs and container-to-container URLs are different
+- Internal service checks should use Docker names like `homepage`, `nextcloud`, and `portainer`
+
+## Caveats
+
+Homepage links are currently hardcoded to `http://shadowserver:*` in [`services/core/config/homepage/services.yaml`](/Users/iyasin/Documents/code/projects/Homebase/services/core/config/homepage/services.yaml), while `.env.example` defaults `ROOT_URL` to `http://localhost`.
 
 That means:
 
 - `ROOT_URL` changes the URLs printed by `start.sh`
 - `ROOT_URL` does not update Homepage links
 
-If you are running this on a different host, update the Homepage links in [`services/core/config/homepage/services.yaml`](/Users/iyasin/Documents/code/projects/Homebase/services/core/config/homepage/services.yaml) to match your actual browser-facing hostname.
+If you run this on a different host, update [`services/core/config/homepage/services.yaml`](/Users/iyasin/Documents/code/projects/Homebase/services/core/config/homepage/services.yaml) to match your real browser-facing hostname.
 
-## First-Run Notes
+## First Run
 
-- Portainer and Nextcloud will need their normal first-run setup in the browser
-- Calibre Web should be pointed at `/books` as its library path
-- Replace all default passwords before exposing any service beyond a trusted local network
+- Portainer and Nextcloud still need their normal in-browser setup
+- Calibre Web should use `/books` as its library path
+- Replace default passwords before exposing anything beyond a trusted network
 
-## Additional Docs
+## More Detail
 
-- [docs/current.md](/Users/iyasin/Documents/code/projects/Homebase/docs/current.md): current repo state and known mismatches
-- [docs/ops.md](/Users/iyasin/Documents/code/projects/Homebase/docs/ops.md): common operational commands
-- [docs/services.md](/Users/iyasin/Documents/code/projects/Homebase/docs/services.md): service inventory and internal targets
+- [docs/current.md](/Users/iyasin/Documents/code/projects/Homebase/docs/current.md) for the current repo state and known mismatches
+- [docs/ops.md](/Users/iyasin/Documents/code/projects/Homebase/docs/ops.md) for operational commands
+- [docs/services.md](/Users/iyasin/Documents/code/projects/Homebase/docs/services.md) for the full service inventory
