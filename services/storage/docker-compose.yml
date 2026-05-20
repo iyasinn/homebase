@@ -11,8 +11,10 @@ services:
       MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:?NEXTCLOUD_DB_PASSWORD is required}
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER:?NEXTCLOUD_ADMIN_USER is required}
       NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD:?NEXTCLOUD_ADMIN_PASSWORD is required}
-      NEXTCLOUD_TRUSTED_DOMAINS: "localhost:8080"
+      NEXTCLOUD_TRUSTED_DOMAINS: "localhost:8080 shadowserver:8080"
       REDIS_HOST: nextcloud-redis
+    extra_hosts:
+      - shadowserver:host-gateway
     volumes:
       - ./volumes/nextcloud:/var/www/html
     depends_on:
@@ -31,8 +33,11 @@ services:
     environment:
       username: ${COLLABORA_USERNAME:?COLLABORA_USERNAME is required}
       password: ${COLLABORA_PASSWORD:?COLLABORA_PASSWORD is required}
-      aliasgroup1: ${COLLABORA_NEXTCLOUD_URL:-http://localhost:8080}
-      extra_params: ${COLLABORA_EXTRA_PARAMS:---o:ssl.enable=false --o:ssl.termination=false}
+      aliasgroup1: ${COLLABORA_NEXTCLOUD_URL:-http://shadowserver:8080}
+      server_name: ${COLLABORA_SERVER_NAME:-shadowserver:9980}
+      extra_params: ${COLLABORA_EXTRA_PARAMS:---o:ssl.enable=false --o:ssl.termination=false --o:server_name=shadowserver:9980}
+    extra_hosts:
+      - shadowserver:host-gateway
     ports:
       - 9980:9980
     labels:
