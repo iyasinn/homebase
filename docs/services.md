@@ -13,7 +13,6 @@
 ## Storage
 
 - `Nextcloud`: file app at `http://shadowserver:8080`
-- `Collabora`: online office suite for Nextcloud at `http://shadowserver:9980`
 - `Calibre Web`: ebook library at `http://shadowserver:8083`
 - `nextcloud-db`: MariaDB for Nextcloud
 - `nextcloud-redis`: Redis for Nextcloud
@@ -27,5 +26,4 @@ Use these for service-to-service checks, not browser links:
 - `http://dozzle:8080`
 - `http://duplicati:8200`
 - `http://nextcloud:80`
-- `http://collabora:9980`
 - `http://calibre-web:8083`

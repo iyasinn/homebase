@@ -22,7 +22,6 @@ The repo keeps hand-managed config in Git and leaves runtime data in local `volu
 ### Storage
 
 - Nextcloud
-- Collabora
 - Calibre Web
 - MariaDB
 - Redis
@@ -49,15 +48,6 @@ Some extra services are present in the compose files but commented out.
    NEXTCLOUD_DB_ROOT_PASSWORD=change-me
    NEXTCLOUD_ADMIN_USER=admin
    NEXTCLOUD_ADMIN_PASSWORD=change-me
-   COLLABORA_USERNAME=admin
-   COLLABORA_PASSWORD=change-me
-   ```
-
-   Optional Collabora settings:
-
-   ```env
-   COLLABORA_NEXTCLOUD_URL=http://localhost:8080
-   COLLABORA_EXTRA_PARAMS=--o:ssl.enable=false --o:ssl.termination=false
    ```
 
 3. Review host bind mounts before first run.
@@ -88,7 +78,6 @@ If `ROOT_URL=http://localhost`, these are the browser entry points:
 - Duplicati: `http://localhost:8200`
 - Nginx Proxy Manager: `http://localhost:81`
 - Nextcloud: `http://localhost:8080`
-- Collabora: `http://localhost:9980`
 - Calibre Web: `http://localhost:8083`
 
 ## Common Commands
@@ -132,7 +121,6 @@ docker logs homepage
 docker logs calibre-web
 docker logs duplicati
 docker logs nextcloud
-docker logs collabora
 ```
 
 ## How The Repo Is Organized
@@ -163,7 +151,7 @@ homebase/
 - Required env vars use `${VAR:?message}` checks, so missing values fail fast
 - Browser-facing URLs and container-to-container URLs are different
 - Internal service checks should use Docker names like `homepage`, `nextcloud`, and `portainer`
-- Collabora is a Nextcloud sidecar, but the `Nextcloud Office` app should use a Collabora URL reachable from the browser and from Nextcloud. Behind Nginx Proxy Manager, set `COLLABORA_NEXTCLOUD_URL` to the browser-facing Nextcloud URL and set `COLLABORA_EXTRA_PARAMS=--o:ssl.enable=false --o:ssl.termination=true` when TLS terminates at the proxy.
+- The Nextcloud container maps `shadowserver` to the Docker host with `extra_hosts` so Nextcloud can reach browser-facing local URLs when needed.
 
 ## Caveats
 
@@ -179,7 +167,6 @@ If you run this on a different host, update [`services/core/config/homepage/serv
 ## First Run
 
 - Portainer and Nextcloud still need their normal in-browser setup
-- Nextcloud still needs the `Nextcloud Office` app configured to use your Collabora URL
 - Calibre Web should use `/books` as its library path
 - Replace default passwords before exposing anything beyond a trusted network
 
