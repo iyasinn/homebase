@@ -23,6 +23,24 @@ services:
       kuma.nextcloud.http.url: "http://nextcloud:80"
     restart: always
 
+  collabora:
+    container_name: collabora
+    image: collabora/code:latest
+    cap_add:
+      - MKNOD
+    environment:
+      username: ${COLLABORA_USERNAME:?COLLABORA_USERNAME is required}
+      password: ${COLLABORA_PASSWORD:?COLLABORA_PASSWORD is required}
+      aliasgroup1: ${COLLABORA_NEXTCLOUD_URL:-http://localhost:8080}
+      extra_params: ${COLLABORA_EXTRA_PARAMS:---o:ssl.enable=false --o:ssl.termination=false}
+    ports:
+      - 9980:9980
+    labels:
+      kuma.collabora.http.name: "Collabora"
+      kuma.collabora.http.url: "http://collabora:9980/browser/dist/admin/admin.html"
+      kuma.collabora.http.accepted_statuscodes: "['200-499']"
+    restart: always
+
   calibre-web:
     container_name: calibre-web
     image: lscr.io/linuxserver/calibre-web:latest

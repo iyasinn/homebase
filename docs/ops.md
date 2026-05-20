@@ -30,6 +30,15 @@ NEXTCLOUD_DB_PASSWORD=
 NEXTCLOUD_DB_ROOT_PASSWORD=
 NEXTCLOUD_ADMIN_USER=
 NEXTCLOUD_ADMIN_PASSWORD=
+COLLABORA_USERNAME=
+COLLABORA_PASSWORD=
+```
+
+## Optional Env
+
+```env
+COLLABORA_NEXTCLOUD_URL=
+COLLABORA_EXTRA_PARAMS=
 ```
 
 ## Compose Failure Policy
@@ -48,6 +57,7 @@ docker logs homepage
 docker logs calibre-web
 docker logs duplicati
 docker logs nextcloud
+docker logs collabora
 ```
 
 ## Notes
@@ -55,4 +65,5 @@ docker logs nextcloud
 - Homepage links are browser-facing and currently point to `shadowserver`
 - Uptime Kuma monitor targets should use internal Docker hostnames
 - If you change `.env`, recreate the affected container when needed
+- If Collabora is behind Nginx Proxy Manager with HTTPS, set `COLLABORA_EXTRA_PARAMS=--o:ssl.enable=false --o:ssl.termination=true`
 - On first run, configure Calibre Web to use `/books` as the library path

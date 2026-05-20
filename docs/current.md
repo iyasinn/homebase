@@ -36,6 +36,7 @@ Rules:
 
 `services/storage`
 - Nextcloud
+- Collabora
 - Calibre Web
 - nextcloud-db
 - nextcloud-redis
